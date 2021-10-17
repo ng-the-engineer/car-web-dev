@@ -2,15 +2,16 @@ import { Color, Make } from './model'
 import { insert, getOne, update } from './database'
 
 describe('Database', () => {
-  test('Insert', () => {
+  test('Insert', async () => {
     const car = {
       make: Make.HONDA,
       model: 'Civic',
       color: Color.MAROON,
       year: 2014,
     }
-    const actual = insert(car)
-    expect(actual?.id).toBe(1)
+    const actual = await insert(car)
+    // expect(actual?.id).toBe(1)
+    expect(actual.make).toBe(Make.HONDA)
   })
 
   test('Get one successfully if id exists', () => {

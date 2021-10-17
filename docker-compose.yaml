@@ -1,7 +1,18 @@
 version: "3.8"
 services:
+  mongodb:
+    image: "mongo"
+    volumes:
+      - car-web-app-data:/data/db
+    env_file:
+      - ./env/mongo.env
   backend:
     build: ./backend
     ports:
       - "80:8088"
-    
+    env_file:
+      - ./env/backend.env
+    depends_on:
+      - mongodb
+volumes:
+  car-web-app-data:

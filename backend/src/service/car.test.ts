@@ -2,14 +2,14 @@ import { Color, Make } from '../data/car/model'
 import { addCar, getCar, updateCar } from './car'
 
 describe('Car service', () => {
-  test('Add car', () => {
+  test('Add car', async () => {
     const car = {
       make: Make.HONDA,
       model: 'Civic',
       color: Color.SILVER,
       year: 2015,
     }
-    const actual = addCar(car)
+    const actual = await addCar(car)
     expect(actual.id).not.toBeUndefined
     expect(actual.make).toBe(Make.HONDA)
     expect(actual.model).toBe('Civic')
