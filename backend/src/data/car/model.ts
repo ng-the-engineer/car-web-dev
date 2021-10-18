@@ -40,9 +40,10 @@ export enum Color {
 }
 
 export type Car = {
-  id?: number
+  id?: string
   make: Make
   model: string
+  modelAlike?: string
   color: Color
   year: number
 }

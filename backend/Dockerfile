@@ -6,7 +6,7 @@ COPY package.json .
 
 RUN yarn
 
-COPY . .
+COPY src/ src/
 
 EXPOSE 8088
 

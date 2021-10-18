@@ -1,5 +1,6 @@
 import { Car } from '../data/car/model'
 import { insert, getOne, update } from '../data/car/database'
+import { enrich } from './enrichment'
 
 export const addCar = async (car: Car): Promise<Car | never> => {
   const addedCar = await insert(car)
@@ -10,7 +11,18 @@ export const addCar = async (car: Car): Promise<Car | never> => {
 export const getCar = async (id: string): Promise<Car | never> => {
   const car = await getOne(id)
   if (!car) throw new Error(`Failed to get car id=${id}`)
-  return car
+
+  const { make, model, color, year } = car
+  const modelAlike = car?.model ? await enrich(car.model) : ''
+
+  return {
+    id,
+    make,
+    model,
+    color,
+    year,
+    modelAlike,
+  }
 }
 
 export const updateCar = async (id: string, car: Car): Promise<Car | never> => {
