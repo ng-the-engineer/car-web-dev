@@ -32,3 +32,10 @@ export const update = async (
   )
   return result
 }
+
+export const remove = async (id: string): Promise<boolean> => {
+  const objId = new mongoose.Types.ObjectId(id)
+  const result = await CarModel.deleteOne({ _id: objId })
+  console.log('delete result:', result)
+  return result.deletedCount === 1
+}

@@ -1,6 +1,6 @@
 import { Car } from '../data/car/model'
 // import * as database from '../data/car/database'
-import { insert, getOne, update } from '../data/car/database' // it does matter to use named import
+import { insert, getOne, update, remove } from '../data/car/database' // it does matter to use named import
 import { enrich } from './enrichment'
 
 // const { insert, getOne, update } = database
@@ -32,4 +32,10 @@ export const updateCar = async (id: string, car: Car): Promise<Car | never> => {
   const updatedCar = await update(id, car)
   if (!updatedCar) throw new Error(`Failed to update car id=${id}`)
   return updatedCar
+}
+
+export const deleteCar = async (id: string): Promise<void> => {
+  const deleteSuccessful = await remove(id)
+  console.log('deleteSuccessful=', deleteSuccessful)
+  if (!deleteSuccessful) throw new Error(`Failed to remove car id=${id}`)
 }

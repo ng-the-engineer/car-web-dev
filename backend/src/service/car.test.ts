@@ -47,6 +47,8 @@ const carEnriched = {
   modelAlike: modelEnriched,
 }
 
+const deletedSuccessful = true
+
 describe('Service > car', () => {
   beforeEach(() => {
     jest.restoreAllMocks()
@@ -94,5 +96,19 @@ describe('Service > car', () => {
     await expect(
       carService.updateCar('H99', carToUpdate),
     ).rejects.toBeUndefined()
+  })
+
+  test('Succeed to delete car if the id is valid', async () => {
+    const mockDelete = jest.spyOn(database, 'remove')
+    mockDelete.mockResolvedValueOnce(deletedSuccessful)
+    await expect(carService.deleteCar('W01')).resolves.toStrictEqual(undefined)
+  })
+
+  test('Failed to delete car if the id does not exist', async () => {
+    const mockDelete = jest.spyOn(database, 'remove')
+    mockDelete.mockRejectedValueOnce(false)
+    await expect(carService.deleteCar('ID_NOT_EXIST')).rejects.toStrictEqual(
+      false,
+    )
   })
 })

@@ -1,6 +1,6 @@
 import express from 'express'
 import { Car, Color } from './data/car/model'
-import { addCar, getCar, updateCar } from './service/car'
+import { addCar, deleteCar, getCar, updateCar } from './service/car'
 import mongoose from 'mongoose'
 import { validate } from './service/make-model.validation'
 import { makeModelMap } from './data/car/make-model.map'
@@ -37,13 +37,11 @@ app.post('/car', async (req, res) => {
   }
 
   if (!validate(make.toUpperCase(), model.toUpperCase())) {
-    res
-      .status(422)
-      .json({
-        message: `Make and model does exist in our list. ${JSON.stringify(
-          Object.fromEntries(makeModelMap),
-        )}`,
-      })
+    res.status(422).json({
+      message: `Make and model does exist in our list. ${JSON.stringify(
+        Object.fromEntries(makeModelMap),
+      )}`,
+    })
     return
   }
 
@@ -97,6 +95,16 @@ app.put('/car/:id', async (req, res) => {
     res.status(200).json(updatedCar)
   } catch (e: unknown) {
     res.status(422).json({ message: `Car id ${id} is not found` })
+  }
+})
+
+app.delete('/car/:id', async (req, res) => {
+  const { id } = req.params
+  try {
+    await deleteCar(id)
+    res.status(200).json({ message: `Car id ${id} has deleted` })
+  } catch (e: unknown) {
+    res.status(422).json({ message: `Failed to delete car with id ${id}` })
   }
 })
 
