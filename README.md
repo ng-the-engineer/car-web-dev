@@ -12,7 +12,13 @@
 
 #### Run the app
 
-##### 1. In the project root folder, run
+##### 1. Download source
+
+```
+$ git clone git@github.com:ng-the-engineer/car-web-dev.git
+```
+
+##### 2. In the project root folder, run
 
 ```
 $ docker-compose up
@@ -25,7 +31,7 @@ $ docker-compose up -d
 
 ```
 
-##### 2. You can access the web with the followed endpoints 
+##### 3. You can access the web with the followed endpoints 
 | Action | URL | HTTP Method |
 | -------- | ----- | --------|
 | Create a car | http://localhost:80/car | POST |
@@ -35,7 +41,7 @@ $ docker-compose up -d
 
 > Note: For API details, head to section `Swagger (API documentation)`
 
-##### 3. Shutdown an environment
+##### 4. Shutdown an environment
 
 ```
 $ docker-compose down
