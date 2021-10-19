@@ -1,9 +1,6 @@
 import { Car } from '../data/car/model'
-// import * as database from '../data/car/database'
-import { insert, getOne, update, remove } from '../data/car/database' // it does matter to use named import
+import { insert, getOne, update, remove } from '../data/car/database'
 import { enrich } from './enrichment'
-
-// const { insert, getOne, update } = database
 
 export async function addCar(car: Car): Promise<Car | never> {
   const addedCar = await insert(car)
