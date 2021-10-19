@@ -6,10 +6,13 @@ export const enrich = async (model: string): Promise<string> => {
     const result: AxiosResponse = await axios.get(
       `https://api.datamuse.com/words?sl=${model}`,
     )
+
+    if (!result) throw Error('Error when calling enrich API')
+
     const wordResult = result.data as EnrichResultType
     return wordResult.map(entry => entry.word).join(', ')
   } catch (err) {
-    console.error(`Error when calling enrich API with word [${model}]`)
+    console.log(`${err} with word [${model}]`)
     return ''
   }
 }

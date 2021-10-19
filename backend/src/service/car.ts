@@ -1,8 +1,11 @@
 import { Car } from '../data/car/model'
-import { insert, getOne, update } from '../data/car/database'
+// import * as database from '../data/car/database'
+import { insert, getOne, update } from '../data/car/database' // it does matter to use named import
 import { enrich } from './enrichment'
 
-export const addCar = async (car: Car): Promise<Car | never> => {
+// const { insert, getOne, update } = database
+
+export async function addCar(car: Car): Promise<Car | never> {
   const addedCar = await insert(car)
   if (!addedCar) throw new Error('Failed to add car')
   return addedCar

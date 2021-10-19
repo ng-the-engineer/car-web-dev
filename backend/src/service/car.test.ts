@@ -1,61 +1,98 @@
 import { Color, Make } from '../data/car/model'
-import { addCar, getCar, updateCar } from './car'
+import * as carService from './car'
+import * as database from '../data/car/database'
+import * as enrichment from './enrichment'
 
-describe('Car service', () => {
-  test('Add car', async () => {
-    const car = {
-      make: Make.HONDA,
-      model: 'Civic',
-      color: Color.SILVER,
-      year: 2015,
-    }
-    const actual = await addCar(car)
-    expect(actual.id).not.toBeUndefined
-    expect(actual.make).toBe(Make.HONDA)
-    expect(actual.model).toBe('Civic')
-    expect(actual.year).toBe(2015)
+const carToAdd = {
+  make: Make.HONDA,
+  model: 'whatever',
+  color: Color.SILVER,
+  year: 2015,
+}
+
+const carToUpdate = {
+  make: Make.HONDA,
+  model: 'Civic',
+  color: Color.WHITE,
+  year: 2018,
+}
+
+const carCreated1 = {
+  make: Make.TOYOTA,
+  model: 'mocked model',
+  year: 2013,
+  color: Color.GREEN,
+}
+
+const carCreated2 = {
+  id: 'J01',
+  make: Make.JAGUAR,
+  model: 'mocked model',
+  year: 2016,
+  color: Color.WHITE,
+}
+
+const carUpdated = {
+  id: 'H01',
+  make: Make.HONDA,
+  model: 'mocked model',
+  color: Color.WHITE,
+  year: 2018,
+}
+
+const modelEnriched = 'A string of similar models'
+
+const carEnriched = {
+  ...carCreated2,
+  modelAlike: modelEnriched,
+}
+
+describe('Service > car', () => {
+  beforeEach(() => {
+    jest.restoreAllMocks()
   })
 
-  test('Succeed to get car if the id is valid', () => {
-    const actual = getCar(1)
-    expect(actual.id).toBe(1)
-    expect(actual.make).toBe(Make.HONDA)
-    expect(actual.model).toBe('Civic')
-    expect(actual.color).toBe(Color.SILVER)
-    expect(actual.year).toBe(2015)
+  test('Succeed to add car', async () => {
+    const mockInsert = jest.spyOn(database, 'insert')
+    mockInsert.mockResolvedValueOnce(carCreated1)
+    await expect(carService.addCar(carToAdd)).resolves.toStrictEqual(
+      carCreated1,
+    )
   })
 
-  test('Failed to get car if the id does not exist', () => {
-    const idNotExist = 9999
-    expect(() => {
-      getCar(idNotExist)
-    }).toThrowError()
+  test('Failed to add a car', async () => {
+    const mockInsert = jest.spyOn(database, 'insert')
+    mockInsert.mockRejectedValueOnce(undefined)
+    await expect(carService.addCar(carToAdd)).rejects.toBeUndefined()
   })
 
-  test('Succeed to update car if the id is valid', () => {
-    const car = {
-      make: Make.HONDA,
-      model: 'Civic',
-      color: Color.WHITE,
-      year: 2018,
-    }
-    const actual = updateCar(1, car)
-    expect(actual?.id).toBe(1)
-    expect(actual?.make).toBe(Make.HONDA)
-    expect(actual?.model).toBe('Civic')
-    expect(actual?.color).toBe(Color.WHITE)
-    expect(actual?.year).toBe(2018)
+  test('Succeed to get car if the id is valid', async () => {
+    const mockGetOne = jest.spyOn(database, 'getOne')
+    const mockEnrich = jest.spyOn(enrichment, 'enrich')
+    mockGetOne.mockResolvedValueOnce(carCreated2)
+    mockEnrich.mockResolvedValueOnce(modelEnriched)
+    await expect(carService.getCar('J01')).resolves.toStrictEqual(carEnriched)
   })
 
-  test('Failed to update car if the id does not exist', () => {
-    const car = {
-      make: Make.HONDA,
-      model: 'Civic',
-      color: Color.WHITE,
-      year: 2018,
-    }
-    expect(() => {
-      updateCar(9999, car)
-    }).toThrowError()
+  test('Failed to get car if the id does not exist', async () => {
+    const mockGetOne = jest.spyOn(database, 'getOne')
+    mockGetOne.mockRejectedValueOnce(undefined)
+    await expect(carService.getCar('ID_NOT_EXIST')).rejects.toBeUndefined()
+  })
+
+  test('Succeed to update car if the id is valid', async () => {
+    const mockInsert = jest.spyOn(database, 'update')
+    mockInsert.mockResolvedValueOnce(carUpdated)
+    await expect(
+      carService.updateCar('H01', carToUpdate),
+    ).resolves.toStrictEqual(carUpdated)
+  })
+
+  test('Failed to update car if the id does not exist', async () => {
+    const mockUpdate = jest.spyOn(database, 'update')
+    mockUpdate.mockRejectedValueOnce(undefined)
+    await expect(
+      carService.updateCar('H99', carToUpdate),
+    ).rejects.toBeUndefined()
   })
 })
