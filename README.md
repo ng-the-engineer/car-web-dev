@@ -4,7 +4,7 @@
 
 - You can spin up an local environment including a Node.js app and a MongoDB instance running in Docker containers respectively.
 
-- After the environment is up, you can `create a car`, `retrieve a car by id`, and `update a car` through RESTful API.
+- After the environment is up, you can `create a car`, `retrieve a car by id`, `update a car` and `delete a car` through RESTful API.
 
 #### Pre-requisites
 Please install below tools:
@@ -72,6 +72,12 @@ Things to do before committing changes:
 - Linting, run `yarn run lint`
 
 #### Docker-compose
+
+If change is made, rebuild the containers by
+
+```
+$ docker-compose up --build
+```
 
 **Attention**
 
