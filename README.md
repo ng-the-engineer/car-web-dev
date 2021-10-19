@@ -23,7 +23,7 @@ In the project root folder, run
 $ docker-compose up
 ```
 
-You may run it as background mode with detached mode
+You may run it in background with detached mode
 
 ```
 $ docker-compose up -d
@@ -34,7 +34,7 @@ $ docker-compose up -d
 | -------- | ----- | --------|
 | Create a car | http://localhost:80/car | POST |
 | Get a car    | http://localhost:80/car/{id} | GET |
-| Update ca car | http://localhost:80/car/{id} | PUT |
+| Update a car | http://localhost:80/car/{id} | PUT |
 | Delete a car | http://localhost:80/car/{id} | DELETE |
 
 #### Shutdown an environment
