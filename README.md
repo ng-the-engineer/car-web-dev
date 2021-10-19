@@ -35,8 +35,7 @@ $ docker-compose up -d
 | Create a car | http://localhost:80/car | POST |
 | Get a car    | http://localhost:80/car/{id} | GET |
 | Update ca car | http://localhost:80/car/{id} | PUT |
-
-
+| Delete a car | http://localhost:80/car/{id} | DELETE |
 
 #### Shutdown an environment
 
@@ -49,6 +48,14 @@ $ docker-compose down
 ```
 $ docker-compose destroy
 ```
+
+---
+### Stories Implemented
+- [x] "As a Developer, I want my code to be covered by tests, so I know if a change has broken something"
+- [x] "As a Consumer of the API, when reading the car model information I would like to see an additional field containing a string of a few words that sound like the model of the cars I have added" (using http://www.datamuse.com/api/ as the source).
+- [x] "As a Consumer of the API, I would like to be able to update my existing cars"
+- [x] "As a Consumer of the API, I would like any cars I add through the API to persist between application restarts (persistent storage)"
+- [x] "As a Consumer of the API, I would like cars to be represented as two separate, hierarchically linked resources: Make, Model
 
 ---
 
