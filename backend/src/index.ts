@@ -1,11 +1,12 @@
 import express from 'express'
-import { Car, Make, Color } from './data/car/model'
+import { Car, Color } from './data/car/model'
 import { addCar, getCar, updateCar } from './service/car'
 import mongoose from 'mongoose'
+import { validate } from './service/make-model.validation'
+import { makeModelMap } from './data/car/make-model.map'
 
 const app = express()
 const port = 8088
-const makeList: string[] = Object.keys(Make).filter(key => isNaN(Number(key)))
 const colorList: string[] = Object.keys(Color).filter(key => isNaN(Number(key)))
 
 app.use(express.json())
@@ -23,15 +24,26 @@ app.get('/car/:id', async (req, res) => {
 
 app.post('/car', async (req, res) => {
   const { make, model, year, color } = req.body
-  if (!make || !makeList.includes(make)) {
+  if (!make) {
     res.status(422).json({
-      message: `Attribute [make] is required or has to be a value in [${makeList}]`,
+      message: `Attribute [make] is required`,
     })
     return
   }
 
   if (!model) {
     res.status(422).json({ message: `Attribute [model] is required` })
+    return
+  }
+
+  if (!validate(make.toUpperCase(), model.toUpperCase())) {
+    res
+      .status(422)
+      .json({
+        message: `Make and model does exist in our list. ${JSON.stringify(
+          Object.fromEntries(makeModelMap),
+        )}`,
+      })
     return
   }
 
