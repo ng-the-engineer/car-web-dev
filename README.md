@@ -2,82 +2,123 @@
 
 ### Quick start 
 
-#### Docker-compose
+- You can spin up an local environment including a Node.js app and a MongoDB instance running in Docker containers respectively.
 
-To start
+- After the environment is up, you can `create a car`, `retrieve a car by id`, and `update a car` through RESTful API.
+
+#### Pre-requisites
+Please install below tools:
+- Docker
+- Docker-compose
+- Node
+- Yarn
+- Typescript
+- Jest
+
+#### Create an environment
+
+In the project root folder, run
+
+```
+$ docker-compose up
+```
+
+You may run it as background mode with detached mode
+
 ```
 $ docker-compose up -d
-```
-
-Access the app on http://localhost:80
-
-To add a car, e.g.
 
 ```
-HTTP method: POST
-URL: localhost:80/car
-Body: {
-    "make": "Honda",
-    "model": "a",
-    "year": 2016,
-    "color": "BRONZE"
-}
-```
-To get a car, e.g.
 
-```
-HTTP method: GET
-URL: localhost:80/car/3
-```
+| Action | URL | HTTP Method |
+| -------- | ----- | --------|
+| Create a car | http://localhost:80/car | POST |
+| Get a car    | http://localhost:80/car/{id} | GET |
+| Update ca car | http://localhost:80/car/{id} | PUT |
 
-To update a car, e.g.
 
-```
-HTTP method: PUT
-URL: localhost:80/car/3
-Body:
-{
-    "make": "Honda",
-    "model": "new 2",
-    "year": 2016,
-    "color": "BRONZE"    
-}
-```
-To stop
+
+#### Shutdown an environment
 
 ```
 $ docker-compose down
 ```
 
-#### Docker
+#### Destroy an environment
 
-To build
 ```
-$ docker build -t car-web-dev .
+$ docker-compose destroy
 ```
 
-To run
-```
-docker run -d --rm -p 80:8088 car-web-dev
-```
+---
 
 ### Development
 
+#### Local
+
+To run the app without Docker, use `yarn run dev`. Please note that there is no MongoDB connected in this case.
+
+Things to do before committing changes:
+
+- Run unit test, under directory `backend/`, run `npx jest`
+- Standardize code format, run `yarn run format`
+- Linting, run `yarn run lint`
+
+#### Docker-compose
+
+**Attention**
+
+If you need to change the initial username and password of MongoDB, please destroy the attached volume before bringing up the environment.
+
+1. Check the volume name
 ```
-$ yarn run dev
+$ docker volume ls
 ```
 
-### Unit Test
-
+2. Remove the volume
 ```
-$ npx jest
-```
-
-### Linting
-
-```
-$ yarn lint
+$ docker volume rm {THE_NAME_OF_VOLUME}
 ```
 
+---
 
+### Project Structure
+
+```
+.
+├── LICENSE
+├── README.md
+├── backend                                    - root folder of the app
+│   ├── Dockerfile
+│   ├── build                                  - The compiled code by Typescript
+│   ├── jest.config.json
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── src
+│   │   ├── data
+│   │   │   └── car
+│   │   │       ├── database.test.ts           - Unit test
+│   │   │       ├── database.ts                - Manage CRUD with MongoDB
+│   │   │       ├── make-model.map.ts          - Definition of Car Make and Car Model relationship
+│   │   │       ├── model.ts                   - Type definition of Car
+│   │   │       └── schema.ts                  - MongodB schema of Car
+│   │   ├── index.ts                           - App entry point
+│   │   └── service
+│   │       ├── car.test.ts                    - Unit test
+│   │       ├── car.ts                         - Business logic of addCar, getCar and updateCar 
+│   │       ├── enrichment.test.ts             - Unit test
+│   │       ├── enrichment.ts                  - Integrate the third party API to enrich the similar model words
+│   │       ├── enrichment.types.ts            - Type definition of the third party API response
+│   │       ├── make-model.validation.test.ts  - Unit test
+│   │       └── make-model.validation.ts       - Function to validate the Car Make and Car Model relationship
+│   ├── tsconfig.json                          
+│   ├── yarn-error.log
+│   └── yarn.lock
+├── docker-compose.yaml                        
+├── env
+│   ├── backend.env                            - Environment variables for accessing database
+│   └── mongo.env                              - Environment variables to initiate MongoDB
+├── package.json
+└── yarn.lock
+```
 
