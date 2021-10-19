@@ -1,5 +1,6 @@
 {
   "preset": "ts-jest",
   "testEnvironment": "node",
-  "roots": ["<rootDir>/src/"]
+  "roots": ["<rootDir>/src/"],
+  "reporters": ["default", "jest-html-reporters"]
 }

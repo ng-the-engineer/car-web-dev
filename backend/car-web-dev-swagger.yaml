@@ -1,0 +1,217 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Car Web Dev Swagger
+  description: API documentation for Car Web Dev
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+servers:
+  - url: http://localhost:80
+paths:
+  /car:
+    post:
+      summary: Create a car
+      operationId: createCar
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostBody"
+        description: Post body payload
+        required: true
+      responses:
+        200:
+          description: Created a car successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Car"
+        422:
+          description: Missing car property in payload
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PostError"
+              examples:
+                sample1:
+                  summary: Car make is missing in payload
+                  value: "message: Attribute [make] is required"
+                sample2:
+                  summary: Car model is missing in payload
+                  value: "message: Attribute [model] is required"
+                sample3:
+                  summary: Color is missing in payload
+                  value: "message: Attribute [color] is required"
+                sample4:
+                  summary: Year is missing in payload
+                  value: "message: Attribute [year] is required"
+
+  /car/{carId}:
+    get:
+      summary: To get a car by id
+      operationId: getCarById
+      parameters:
+        - name: carId
+          in: path
+          required: true
+          description: The id of the car to retrieve
+          schema:
+            type: string
+      responses:
+        200:
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CarRetrieved"
+        422:
+          description: The car id is not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    put:
+      summary: To update a car by id
+      operationId: updateCarById
+      parameters:
+        - name: carId
+          in: path
+          required: true
+          description: The id of the car to update
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostBody"
+        description: Post body payload
+        required: true
+      responses:
+        200:
+          description: A car information is updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Car"
+        422:
+          description: The car id is not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      summary: To delete a car by id
+      operationId: deleteCarById
+      parameters:
+        - name: carId
+          in: path
+          required: true
+          description: The id of the car to delete
+          schema:
+            type: string
+      responses:
+        200:
+          description: A car is deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CarDeleteSuccess"
+        422:
+          description: Failed to delete a car with a specific car id
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeleteError"
+
+components:
+  schemas:
+    Car:
+      required:
+        - carId
+      properties:
+        id:
+          type: string
+          example: "616f022f828a580de109e05a"
+        make:
+          type: string
+          example: "HONDA"
+        model:
+          type: string
+          example: "FREED"
+        color:
+          type: string
+          example: "SILVER"
+        year:
+          type: integer
+          example: 2017
+    CarRetrieved:
+      required:
+        - carId
+      properties:
+        id:
+          type: string
+          example: "616f022f828a580de109e05a"
+        make:
+          type: string
+          example: "HONDA"
+        model:
+          type: string
+          example: "FREED"
+        color:
+          type: string
+          example: "SILVER"
+        year:
+          type: integer
+          example: 2017
+        modelAlike:
+          type: string
+          example: "civic, sivak, savic, savak, civics, seviche, siva, spivak, stk, svec"
+    CarDeleteSuccess:
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          example: "Car id 616f1a2612e9caed54856f81 has deleted"
+    Error:
+      required:
+        - code
+        - message
+      properties:
+        message:
+          type: string
+          example: "Car id 616f022f828a580de109e05a is not found"
+    PostError:
+      required:
+        - message
+      properties:
+        message:
+          type: string
+    DeleteError:
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          example: "Failed to delete car with id 616f18df12e9caed54856"
+    PostBody:
+      type: object
+      properties:
+        make:
+          description: The car maker
+          type: string
+          example: "TESLA"
+        model:
+          description: The car model
+          type: string
+          example: "MODEL X"
+        color:
+          description: Color of the car
+          type: string
+          example: "BLACK"
+        year:
+          description: Year of the car
+          type: integer
+          example: 2019

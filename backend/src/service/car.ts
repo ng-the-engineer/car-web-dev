@@ -36,6 +36,5 @@ export const updateCar = async (id: string, car: Car): Promise<Car | never> => {
 
 export const deleteCar = async (id: string): Promise<void> => {
   const deleteSuccessful = await remove(id)
-  console.log('deleteSuccessful=', deleteSuccessful)
   if (!deleteSuccessful) throw new Error(`Failed to remove car id=${id}`)
 }

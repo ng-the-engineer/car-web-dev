@@ -1,35 +1,31 @@
 # car-web-dev
 
-### Quick start 
+## Quick start 
 
-- You can spin up an local environment including a Node.js app and a MongoDB instance running in Docker containers respectively.
+- You can spin up a local environment including a Node.js app and a MongoDB instance running in Docker containers respectively.
 
-- After the environment is up, you can `create a car`, `retrieve a car by id`, `update a car` and `delete a car` through RESTful API.
+- After the environment is up, you can `create a car`, `retrieve a car by id`, `update a car` and `delete a car` through RESTful APIs.
 
-#### Pre-requisites
-Please install below tools:
+#### Tools required
 - Docker
 - Docker-compose
-- Node
-- Yarn
-- Typescript
-- Jest
 
-#### Create an environment
+#### Run the app
 
-In the project root folder, run
+##### 1. In the project root folder, run
 
 ```
 $ docker-compose up
 ```
 
-You may run it in background with detached mode
+Or, you may run it in background with detached mode
 
 ```
 $ docker-compose up -d
 
 ```
 
+##### 2. You can access the web with the followed endpoints 
 | Action | URL | HTTP Method |
 | -------- | ----- | --------|
 | Create a car | http://localhost:80/car | POST |
@@ -37,20 +33,16 @@ $ docker-compose up -d
 | Update a car | http://localhost:80/car/{id} | PUT |
 | Delete a car | http://localhost:80/car/{id} | DELETE |
 
-#### Shutdown an environment
+> Note: For API details, head to section `Swagger (API documentation)`
+
+##### 3. Shutdown an environment
 
 ```
 $ docker-compose down
 ```
 
-#### Destroy an environment
-
-```
-$ docker-compose destroy
-```
-
 ---
-### Stories Implemented
+## Stories Implemented
 - [x] "As a Developer, I want my code to be covered by tests, so I know if a change has broken something"
 - [x] "As a Consumer of the API, when reading the car model information I would like to see an additional field containing a string of a few words that sound like the model of the cars I have added" (using http://www.datamuse.com/api/ as the source).
 - [x] "As a Consumer of the API, I would like to be able to update my existing cars"
@@ -59,19 +51,16 @@ $ docker-compose destroy
 
 ---
 
-### Development
-
-#### Local
+## Development
 
 To run the app without Docker, use `yarn run dev`. Please note that there is no MongoDB connected in this case.
 
 Things to do before committing changes:
+1. Run unit test, under directory `backend/`, run `yarn run test`
+2. Standardize code format, run `yarn run format`
+3. Linting, run `yarn run lint`
 
-- Run unit test, under directory `backend/`, run `npx jest`
-- Standardize code format, run `yarn run format`
-- Linting, run `yarn run lint`
-
-#### Docker-compose
+A default code coverage is displayed after you ran `yarn run test`. An additional HTML test report is generated at `backend\jest_html_reporters.html`
 
 If change is made, rebuild the containers by
 
@@ -79,7 +68,7 @@ If change is made, rebuild the containers by
 $ docker-compose up --build
 ```
 
-**Attention**
+**Attention!**
 
 If you need to change the initial username and password of MongoDB, please destroy the attached volume before bringing up the environment.
 
@@ -94,6 +83,17 @@ $ docker volume rm {THE_NAME_OF_VOLUME}
 ```
 
 ---
+### Swagger (API documentation)
+
+To view the swagger
+
+1. Run `yarn global add @redocly/openapi-cli` to install [Redocly](https://redoc.ly/docs).
+
+2. Under root folder, run `openapi preview-docs car-web-dev-swagger.yaml`.
+
+3. Navigate to http://127.0.0.1:8080/ to access the swagger.
+
+---
 
 ### Project Structure
 
@@ -102,9 +102,11 @@ $ docker volume rm {THE_NAME_OF_VOLUME}
 ├── LICENSE
 ├── README.md
 ├── backend                                    - root folder of the app
+│   ├── car-web-dev-swagger.yaml               - Open API 3.0 Swagger
 │   ├── Dockerfile
 │   ├── build                                  - The compiled code by Typescript
 │   ├── jest.config.json
+│   ├── jest_html_reporters.html               - Generated test report
 │   ├── package-lock.json
 │   ├── package.json
 │   ├── src
